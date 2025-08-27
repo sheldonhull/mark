@@ -72,3 +72,18 @@
     * Important bullet 1
     * Important bullet 2
 
+## Collapsed Admonitions with ???
+
+### Question Mark Syntax
+
+??? note "Collapsed Note"
+    * Collapsed note bullet 1
+    * Collapsed note bullet 2
+
+??? warning "Collapsed Warning"
+    * Collapsed warning bullet 1
+    * Collapsed warning bullet 2
+
+??? info "Collapsed Info"
+    This is collapsed info content.
+
