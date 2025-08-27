@@ -1,0 +1,29 @@
+<h1 id="Collapsed-Admonitions-Test">Collapsed Admonitions Test</h1>
+<p>Regular expanded admonition:</p>
+<ac:structured-macro ac:name="note"><ac:parameter ac:name="icon">true</ac:parameter><ac:rich-text-body>
+<p><strong>"Expanded Note"</strong></p>
+<p>This is an expanded note.</p>
+</ac:rich-text-body></ac:structured-macro>
+<p>Collapsed admonition:</p>
+<ac:structured-macro ac:name="note"><ac:parameter ac:name="icon">true</ac:parameter><ac:rich-text-body>
+<p><strong>"Collapsed Note"</strong></p>
+<p>This is a collapsed note.</p>
+</ac:rich-text-body></ac:structured-macro>
+<p>Both types together:</p>
+<ac:structured-macro ac:name="info"><ac:parameter ac:name="icon">true</ac:parameter><ac:rich-text-body>
+<p><strong>"Expanded Info"</strong></p>
+<p>Regular expanded info admonition.</p>
+</ac:rich-text-body></ac:structured-macro>
+<ac:structured-macro ac:name="warning"><ac:parameter ac:name="icon">true</ac:parameter><ac:rich-text-body>
+<p><strong>"Collapsed Warning"</strong></p>
+<p>This is a collapsed warning admonition.</p>
+</ac:rich-text-body></ac:structured-macro>
+<p>Nested collapsed:</p>
+<ac:structured-macro ac:name="note"><ac:parameter ac:name="icon">true</ac:parameter><ac:rich-text-body>
+<p><strong>"Outer Note"</strong></p>
+<p>This contains a nested collapsed admonition.</p>
+<ac:structured-macro ac:name="tip"><ac:parameter ac:name="icon">true</ac:parameter><ac:rich-text-body>
+<p><strong>"Inner Collapsed Tip"</strong></p>
+<p>This is nested inside.</p>
+</ac:rich-text-body></ac:structured-macro>
+</ac:rich-text-body></ac:structured-macro>

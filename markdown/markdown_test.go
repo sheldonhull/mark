@@ -92,7 +92,7 @@ func TestCompileMarkdownDropH1(t *testing.T) {
 		}
 		var variant string
 		switch filename {
-		case "testdata/quotes.md", "testdata/header.md", "testdata/admonitions.md":
+		case "testdata/quotes.md", "testdata/header.md", "testdata/admonitions.md", "testdata/collapsed-admonitions.md":
 			variant = "-droph1"
 		default:
 			variant = ""
@@ -135,7 +135,7 @@ func TestCompileMarkdownStripNewlines(t *testing.T) {
 		}
 		var variant string
 		switch filename {
-		case "testdata/quotes.md", "testdata/codes.md", "testdata/newlines.md", "testdata/macro-include.md", "testdata/admonitions.md":
+		case "testdata/quotes.md", "testdata/codes.md", "testdata/newlines.md", "testdata/macro-include.md", "testdata/admonitions.md", "testdata/collapsed-admonitions.md":
 			variant = "-stripnewlines"
 		default:
 			variant = ""
