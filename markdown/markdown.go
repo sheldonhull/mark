@@ -2,6 +2,7 @@ package mark
 
 import (
 	"bytes"
+	"regexp"
 	"slices"
 
 	"github.com/kovetskiy/mark/attachment"
@@ -19,6 +20,41 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/util"
 )
+
+// preprocessAdmonitions converts ??? syntax to !!! syntax for compatibility
+func preprocessAdmonitions(markdown []byte) []byte {
+	// Convert ??? to !!! at the beginning of lines (with optional leading whitespace)
+	admonitionRegex := regexp.MustCompile(`^(\s*)\?{3,}(\s+.*)$`)
+	
+	lines := bytes.Split(markdown, []byte("\n"))
+	for i, line := range lines {
+		if admonitionRegex.Match(line) {
+			// Replace ??? with !!! while preserving the rest of the line
+			newLine := admonitionRegex.ReplaceAllFunc(line, func(match []byte) []byte {
+				submatch := admonitionRegex.FindSubmatch(match)
+				if len(submatch) >= 3 {
+					prefix := submatch[1] // leading whitespace
+					suffix := submatch[2] // everything after the ???
+					
+					// Count the number of ? characters
+					questionStart := len(prefix)
+					questionCount := 0
+					for j := questionStart; j < len(match) && match[j] == '?'; j++ {
+						questionCount++
+					}
+					
+					// Replace with the same number of ! characters
+					exclamations := bytes.Repeat([]byte("!"), questionCount)
+					return bytes.Join([][]byte{prefix, exclamations, suffix}, []byte(""))
+				}
+				return match
+			})
+			lines[i] = newLine
+		}
+	}
+	
+	return bytes.Join(lines, []byte("\n"))
+}
 
 // Renderer renders anchor [Node]s.
 type ConfluenceExtension struct {
@@ -79,6 +115,11 @@ func (c *ConfluenceExtension) Extend(m goldmark.Markdown) {
 
 func CompileMarkdown(markdown []byte, stdlib *stdlib.Lib, path string, cfg types.MarkConfig) (string, []attachment.Attachment) {
 	log.Tracef(nil, "rendering markdown:\n%s", string(markdown))
+
+	// Preprocess ??? admonitions to !!! if mkdocsadmonitions feature is enabled
+	if slices.Contains(cfg.Features, "mkdocsadmonitions") {
+		markdown = preprocessAdmonitions(markdown)
+	}
 
 	confluenceExtension := NewConfluenceExtension(stdlib, path, cfg)
 
