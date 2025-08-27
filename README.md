@@ -740,19 +740,22 @@ Optionally you can enable mkdocs-style [Admonitions](https://squidfunk.github.io
 
 When enabled, this renders all 12 mkdocs-material admonition types as Confluence alerts with appropriate mappings:
 
-- **Confluence `info` macro**: `note`, `abstract`, `info`, `question`
+- **Confluence `info` macro**: `info`, `abstract`, `question`
 - **Confluence `tip` macro**: `tip`, `success`, `example`  
 - **Confluence `warning` macro**: `warning`, `failure`, `danger`, `bug`
-- **Confluence `note` macro**: `quote`
+- **Confluence `note` macro**: `note`, `quote`
 
 ```markdown
 !!! note
+
     This is a note admonition.
 
 !!! success "Custom Title"
+
     This is a success admonition with custom title.
 
 !!! danger
+
     This is a danger admonition.
 ```
 
