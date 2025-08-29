@@ -738,10 +738,16 @@ X -> Y
 
 Optionally you can enable mkdocs-style [Admonitions](https://squidfunk.github.io/mkdocs-material/reference/admonitions/) via `--features="mkdocsadmonitions"`.
 
-When enabled, this renders note, warning, tip, info admonitions as Confluence alerts.
+When enabled, this renders note, warning, tip, info admonitions as Confluence alerts. Both expanded (`!!!`) and collapsed (`???`) syntax are supported.
 
 ```markdown
-!!! note
+!!! note "Expanded Note"
+
+    This is always visible content.
+
+??? warning "Collapsed Warning"
+
+    This content would be collapsed in mkdocs-material.
 ```
 
 ## Installation
