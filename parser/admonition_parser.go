@@ -3,12 +3,13 @@ package parser
 import (
 	"bytes"
 	"fmt"
+	"math/rand"
 
+	admonitions "github.com/stefanfritsch/goldmark-admonitions"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
-	originalParser "github.com/stefanfritsch/goldmark-admonitions"
 )
 
 type enhancedAdmonitionParser struct {
@@ -25,7 +26,7 @@ func NewEnhancedAdmonitionParser() parser.BlockParser {
 type admonitionData struct {
 	ID                string   // The ID of the admonition. This enables nested admonitions with indentation
 	char              byte     // Either "!" or "?"
-	indent            int      // The indentation of the opening (and closing) tags (!!!{} or ???{})
+	indent            int      // The indentation of the opening (and closing) tags (!!!{})
 	length            int      // The length of the admonition, e.g. is it !!! or !!!!?
 	node              ast.Node // The node of the admonition
 	contentIndent     int      // The indentation of the content relative to the previous admonition block. The first line of the content is taken as its indentation. If you want an admonition with just a code block you need to use backticks
@@ -34,8 +35,17 @@ type admonitionData struct {
 
 var admonitionInfoKey = parser.NewContextKey()
 
+const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func genRandomString(n int) string {
+	bytes := make([]byte, n)
+	for i := range bytes {
+		bytes[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(bytes)
+}
+
 func (b *enhancedAdmonitionParser) Trigger() []byte {
-	// Support both ! and ? characters
 	return []byte{'!', '?'}
 }
 
@@ -47,6 +57,7 @@ func (b *enhancedAdmonitionParser) Open(parent ast.Node, reader text.Reader, pc 
 	}
 	findent := pos
 
+	// currently useless
 	admonitionChar := line[pos]
 	i := pos
 	for ; i < len(line) && line[i] == admonitionChar; i++ {
@@ -118,8 +129,8 @@ func (b *enhancedAdmonitionParser) Open(parent ast.Node, reader text.Reader, pc 
 // * admonition class
 // * admonition title
 // * attributes
-func parseOpeningLine(reader text.Reader, left int) *originalParser.Admonition {
-	node := originalParser.NewAdmonition()
+func parseOpeningLine(reader text.Reader, left int) *admonitions.Admonition {
+	node := admonitions.NewAdmonition()
 	reader.Advance(left)
 
 	remainingLine, _ := reader.PeekLine()
@@ -300,14 +311,4 @@ func hasClosingTag(line []byte, w int, pos int, fdata *admonitionData) (bool, in
 	}
 
 	return false, 0
-}
-
-// Generate random string - copied from the original library  
-func genRandomString(n int) string {
-	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	bytes := make([]byte, n)
-	for i := range bytes {
-		bytes[i] = letters[i%len(letters)] // Use deterministic pattern for consistent tests
-	}
-	return string(bytes)
 }

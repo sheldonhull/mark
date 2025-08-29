@@ -41,19 +41,11 @@ const (
 	ANote
 	AWarn
 	ATip
-	AAbstract
-	ASuccess
-	AQuestion
-	AFailure
-	ADanger
-	ABug
-	AExample
-	AQuote
 	ANone
 )
 
 func (t MkDocsAdmonitionType) String() string {
-	return []string{"info", "note", "warning", "tip", "abstract", "success", "question", "failure", "danger", "bug", "example", "quote", "none"}[t]
+	return []string{"info", "note", "warning", "tip", "none"}[t]
 }
 
 type MkDocsAdmonitionLevelMap map[ast.Node]int
@@ -77,41 +69,8 @@ func ParseMkDocsAdmonitionType(node ast.Node) MkDocsAdmonitionType {
 		return AWarn
 	case "tip":
 		return ATip
-	case "abstract":
-		return AAbstract
-	case "success":
-		return ASuccess
-	case "question":
-		return AQuestion
-	case "failure":
-		return AFailure
-	case "danger":
-		return ADanger
-	case "bug":
-		return ABug
-	case "example":
-		return AExample
-	case "quote":
-		return AQuote
 	default:
 		return ANone
-	}
-}
-
-// ConfluenceMacroName maps MkDocs admonition types to Confluence macro names
-// Confluence supports: info, note, warning, tip
-func (t MkDocsAdmonitionType) ConfluenceMacroName() string {
-	switch t {
-	case AInfo, AAbstract, AQuestion:
-		return "info"
-	case ANote, AQuote:
-		return "note"
-	case AWarn, AFailure, ADanger, ABug:
-		return "warning"
-	case ATip, ASuccess, AExample:
-		return "tip"
-	default:
-		return "note" // fallback to note for unknown types
 	}
 }
 
@@ -151,8 +110,7 @@ func (r *ConfluenceMkDocsAdmonitionRenderer) renderMkDocsAdmonition(writer util.
 	admonitionLevel := r.LevelMap.Level(node)
 
 	if admonitionLevel == 0 && entering && admonitionType != ANone {
-		macroName := admonitionType.ConfluenceMacroName()
-		prefix := fmt.Sprintf("<ac:structured-macro ac:name=\"%s\"><ac:parameter ac:name=\"icon\">true</ac:parameter><ac:rich-text-body>\n", macroName)
+		prefix := fmt.Sprintf("<ac:structured-macro ac:name=\"%s\"><ac:parameter ac:name=\"icon\">true</ac:parameter><ac:rich-text-body>\n", admonitionType)
 		if _, err := writer.Write([]byte(prefix)); err != nil {
 			return ast.WalkStop, err
 		}
